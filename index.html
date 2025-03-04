@@ -19,7 +19,7 @@
         
         <div class="products-container" v-if="products.length">
             <div class="product-card" v-for="product in products" :key="product.id">
-                <img :src="product.image" alt="Product Image" class="product-image">
+                <img :src="product.imageData" alt="Product Image" class="product-image">
                 <div class="product-info">
                     <div class="text-info">
                         <h3>{{ product.name }}</h3>
@@ -33,7 +33,29 @@
             </div>
         </div>  
         <div v-else>Ingen produkter tilgængelige</div>
+        
+        <div>
+            <h2>Tilføj Produkter</h2>
+            <div class="products-container">
+                <label for="fileInput" class="btn btn-primary">
+                    <i class="bi bi-upload"></i> Choose File
+                    <input type="file" id="fileInput" @change="handleFileUpload" style="display: none;">
+                </label>
+                <span v-if="selectedFile" class="ml-2 text-muted">{{ selectedFile.name }}</span>
+            </div>
+            <input v-model="product.name" @input="logData" placeholder="Product Name" type="text" class="form-control mb-2" />
+            <input v-model="product.model" @input="logData" placeholder="Product Model" type="text" class="form-control mb-2" />
+            <input v-model="product.price" @input="logData" placeholder="Product Price" type="number" class="form-control mb-2" />
+                        <button @click="addProduct" class="btn btn-success">
+                <i class="bi bi-cloud-upload"></i> Upload
+            </button>
+            <div v-if="uploadMessage" class="text-success mt-2">{{ uploadMessage }}</div>
+        </div>
+
+
+
     </div>
+    
 </div>
 
 
