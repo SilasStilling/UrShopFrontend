@@ -12,6 +12,18 @@
 <body>
     
 <div id="app">
+    <h1>UrShop</h1>
+    <div>
+        <h2>Login</h2>
+        <form @submit.prevent="login">
+            <label for="username">Username:</label>
+            <input type="text" id="username" v-model="user.username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" v-model="user.password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p>{{ loginMessage }}</p>
+    </div>
     <div class="section">
         <h2>Produkter</h2>
         <button v-on:click="getAllProducts" class="btn-primary">Hent produkter</button>

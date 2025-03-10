@@ -1,4 +1,5 @@
 const ApiUrl = 'https://localhost:7214/api/Products';
+const AuthUrl = 'https://localhost:7214/api/Users/login'; // URL til login endpoint
 
 Vue.createApp({
     data() {
@@ -10,12 +11,18 @@ Vue.createApp({
             deleteId: 0,
             deleteMessage: "",
             uploadMessage: "",
+            loginMessage: "",
             product: Vue.reactive({
                 name: "",
                 model: "",
                 price: 0,
                 imageData: ""
             }),
+            user: {
+                username: "",
+                password: ""
+            },
+            token: localStorage.getItem("token") || ""
         };
     },
     created() {
@@ -24,7 +31,11 @@ Vue.createApp({
     methods: {
         async getAllProducts() {
             try {
-                const response = await axios.get(ApiUrl);
+                const response = await axios.get(ApiUrl, {
+                    headers: {
+                        "Authorization": `Bearer ${this.token}`
+                    }
+                });
                 console.log("Received products:", response.data); // Debugging
                 this.products = response.data.map(product => {
                     let imageData = product.imageData;
@@ -73,7 +84,10 @@ Vue.createApp({
                 }
 
                 const response = await axios.post(ApiUrl, formData, {
-                    headers: { "Content-Type": "multipart/form-data" }
+                    headers: { 
+                        "Content-Type": "multipart/form-data",
+                        "Authorization": `Bearer ${this.token}`
+                    }
                 });
 
                 this.uploadMessage = "Produkt tilføjet succesfuldt!";
@@ -82,6 +96,28 @@ Vue.createApp({
                 console.error("Upload error:", ex.response ? ex.response.data : ex.message);
                 alert("Fejl ved upload af produkt.");
             }
-        }       
+        },
+        async login() {
+            try {
+                const response = await axios.post(AuthUrl, {
+                    username: this.user.username,
+                    password: this.user.password
+                }, {
+                    headers: { "Content-Type": "application/json" }
+                });
+
+                const data = response.data;
+                if (data.token) {
+                    this.token = data.token;
+                    localStorage.setItem("token", this.token); // Gem token
+                    this.loginMessage = "Login successful!";
+                } else {
+                    this.loginMessage = "Login failed!";
+                }
+            } catch (ex) {
+                console.error("Login error:", ex);
+                this.loginMessage = "Login error!";
+            }
+        }
     },
 }).mount('#app');
