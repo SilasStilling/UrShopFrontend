@@ -24,6 +24,7 @@ Vue.createApp({
             },
             token: localStorage.getItem("token") || "",
             showLogin: false, // Login-formularens synlighed
+            isLoggedIn: false,
             isAdmin: false, // Admin-status
         };
     },
@@ -113,6 +114,7 @@ Vue.createApp({
                     this.token = data.token;
                     localStorage.setItem("token", this.token); // Gem token
                     this.loginMessage = "Login successful!";
+                    this.isLoggedIn = true;
                     this.isAdmin = true;
                 } else {
                     this.loginMessage = "Login failed!";
@@ -124,14 +126,20 @@ Vue.createApp({
         },
         logout() {
             this.isAdmin = false;
+            this.isLoggedIn = false; // Opdater isLoggedIn status
             this.user.username = "";
             this.user.password = "";
             this.loginMessage = "Logout successful!";
             this.token = "";
-            localStorage.removeItem("token"); // Fjern token, ved ikke om det virker endnu.            
+            localStorage.removeItem("token"); // Fjern token
         },
         toggleLogin() {
             this.showLogin = !this.showLogin;
+        },
+        checkToken() {
+            if (this.token) {
+                this.isLoggedIn = true;
+            }
         },
     },
 }).mount('#app');
