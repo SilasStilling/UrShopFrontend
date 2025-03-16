@@ -22,7 +22,9 @@ Vue.createApp({
                 username: "",
                 password: ""
             },
-            token: localStorage.getItem("token") || ""
+            token: localStorage.getItem("token") || "",
+            showLogin: false, // Login-formularens synlighed
+            isAdmin: false, // Admin-status
         };
     },
     created() {
@@ -111,6 +113,7 @@ Vue.createApp({
                     this.token = data.token;
                     localStorage.setItem("token", this.token); // Gem token
                     this.loginMessage = "Login successful!";
+                    this.isAdmin = true;
                 } else {
                     this.loginMessage = "Login failed!";
                 }
@@ -118,6 +121,17 @@ Vue.createApp({
                 console.error("Login error:", ex);
                 this.loginMessage = "Login error!";
             }
-        }
+        },
+        logout() {
+            this.isAdmin = false;
+            this.user.username = "";
+            this.user.password = "";
+            this.loginMessage = "Logout successful!";
+            this.token = "";
+            localStorage.removeItem("token"); // Fjern token, ved ikke om det virker endnu.            
+        },
+        toggleLogin() {
+            this.showLogin = !this.showLogin;
+        },
     },
 }).mount('#app');
