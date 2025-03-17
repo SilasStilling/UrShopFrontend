@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script defer src="checkout.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="checkout.css">
+
+</head>
+<body>
+    <div id="checkout-app">
+        <h1>Din checkout</h1>
+        <div v-if="cart.length === 0" class="cart-empty">
+            <p>Kurven er tom. Venligst tilføj produkter før du fortsætter.</p>
+            <a href="index.html" class="btn btn-primary">Tilbage til butik</a>
+        </div>
+        
+        <div v-else>
+            <h3>Din ordre:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produkt</th>
+                        <th>Model</th>
+                        <th>Pris</th>
+                        <th>Antal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in cart" :key="item.id">
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.model }}</td>
+                        <td>{{ item.price }} DKK</td>
+                        <td>{{ item.quantity }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Samlet pris: {{ totalPrice }} DKK</h3>
+            
+            <div class="payment-form">
+                <h4>Betalingsoplysninger</h4>
+                <form @submit.prevent="handlePayment">
+                    <div class="form-group">
+                        <label for="cardNumber">Kortnummer</label>
+                        <input type="text" id="cardNumber" v-model="payment.cardNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expiryDate">Udløbsdato</label>
+                        <input type="text" id="expiryDate" v-model="payment.expiryDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" v-model="payment.cvv" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Betal</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
