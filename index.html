@@ -42,7 +42,7 @@
                         <button v-if="isLoggedIn" v-on:click="toggleChangePassword" class="btn btn-secondary me-2" >Change Password</button>
                     </div>
                     <div>
-                        <button v-on:click="toggleRegister" class="btn btn-secondary me-2" type="button">Opret bruger</button>
+                        <button v-if="!isLoggedIn" v-on:click="toggleRegister" class="btn btn-secondary me-2" type="button">Opret bruger</button>
                     </div>
                     <div>
                         <button v-if="!isLoggedIn" v-on:click="toggleLogin" class="btn btn-secondary">Login</button>
