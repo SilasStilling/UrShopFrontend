@@ -1,5 +1,5 @@
 const ApiUrl = 'https://localhost:7214/api/Products';
-const AuthUrl = 'https://localhost:7214/api/Users/login'; // URL til login endpoint
+const AuthUrl = 'https://localhost:7214/api/Users/login';
 const RegisterUrl = 'https://localhost:7214/api/Users';
 
 Vue.createApp({
@@ -39,14 +39,19 @@ Vue.createApp({
                 password: ""
             },
             token: localStorage.getItem("token") || "",
-            showLogin: false, // Login-formularens synlighed
+            showLogin: false,
             isLoggedIn: false,
-            isAdmin: false, // Admin-status
+            isAdmin: false,
         };
     },
     created() {
         this.getAllProducts();
         this.checkToken();
+    },
+    computed: {
+        totalCartItems() {
+            return this.cart.reduce((total, item) => total + item.quantity, 0);
+        }
     },
     methods: {
         async getAllProducts() {
@@ -56,13 +61,13 @@ Vue.createApp({
                         "Authorization": `Bearer ${this.token}`
                     }
                 });
-                console.log("Received products:", response.data); // Debugging
+                console.log("Received products:", response.data);
                 this.products = response.data.map(product => {
                     let imageData = product.imageData;
                     if (imageData && typeof imageData === "string" && imageData.length > 0) {
                         imageData = `data:image/jpeg;base64,${imageData}`;
                     } else {
-                        imageData = '/images/rolexpepsi.jpg'; // Placeholder image
+                        imageData = '/images/rolexpepsi.jpg';
                     }
                     return {
                         ...product,
@@ -102,106 +107,9 @@ Vue.createApp({
                 this.registerMessage = 'Registration error!';
             }
         },
-        handleFileUpload(event) {
-            this.selectedFile = event.target.files[0];
-            console.log("Selected file:", this.selectedFile); // Debugging
-            this.convertToBase64(this.selectedFile);
-        },
-        convertToBase64(file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                this.product.imageData = e.target.result.split(',')[1]; // Fjern metadata-delen
-                console.log("Base64 image data:", this.product.imageData); // Debugging
-            };
-            reader.readAsDataURL(file);
-        },
-        async addProduct() {
-            try {
-                const formData = new FormData();
-                formData.append("name", this.product.name);
-                formData.append("model", this.product.model);
-                formData.append("price", this.product.price);
-                formData.append("imageData", this.product.imageData); // Tilføj imageData
-
-                if (this.selectedFile) {
-                    formData.append("file", this.selectedFile); // Tilføj filen korrekt
-                } else {
-                    console.error("No file selected!"); // Debug-log hvis ingen fil er valgt
-                    alert("Vælg venligst en fil før du uploader.");
-                    return;
-                }
-
-                const response = await axios.post(ApiUrl, formData, {
-                    headers: { 
-                        "Content-Type": "multipart/form-data",
-                        "Authorization": `Bearer ${this.token}`
-                    }
-                });
-
-                this.uploadMessage = "Produkt tilføjet succesfuldt!";
-                this.getAllProducts();
-            } catch (ex) {
-                console.error("Upload error:", ex.response ? ex.response.data : ex.message);
-                alert("Fejl ved upload af produkt.");
-            }
-        },
-        addToCart(product) {
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            let existingProduct = cart.find(item => item.id === product.id);
-        
-            if (existingProduct) {
-                existingProduct.quantity++;
-            } else {
-                cart.push({ ...product, quantity: 1 });
-            }
-        
-            localStorage.setItem("cart", JSON.stringify(cart));
-            alert(`${product.name} tilføjet til kurven!`);
-        },        
-        async login() {
-            try {
-                const response = await axios.post(AuthUrl, {
-                    username: this.user.username,
-                    password: this.user.password
-                }, {
-                    headers: { "Content-Type": "application/json" }
-                });
-
-                const data = response.data;
-                if (data.token) {
-                    this.token = data.token;
-                    localStorage.setItem("token", this.token); // Gem token
-                    this.loginMessage = "Login successful!";
-                    this.isLoggedIn = true;
-                    this.isAdmin = true;
-                } else {
-                    this.loginMessage = "Login failed!";
-                }
-            } catch (ex) {
-                console.error("Login error:", ex);
-                this.loginMessage = "Login error!";
-            }
-        },
-        logout() {
-            this.isAdmin = false;
-            this.isLoggedIn = false; // Opdater isLoggedIn status
-            this.user.username = "";
-            this.user.password = "";
-            this.loginMessage = "Logout successful!";
-            this.token = "";
-            localStorage.removeItem("token"); // Fjern token
-        },
-        toggleLogin() {
-            this.showLogin = !this.showLogin;
-        },
-        checkToken() {
-            if (this.token) {
-                this.isLoggedIn = true;
-            }
-        },
         async changePassword() {
             // Implement change password logic here
-            // PUT er ikke implementeret endnu
+            // Example:
             try {
                 const response = await axios.put('https://localhost:7214/api/Users/change-password', {
                     oldPassword: this.oldPassword,
@@ -220,6 +128,102 @@ Vue.createApp({
             } catch (ex) {
                 console.error("Password change error:", ex);
                 this.passwordChangeError = 'Password change error!';
+            }
+        },
+        addToCart(product) {
+            const cartItem = this.cart.find(item => item.id === product.id);
+            if (cartItem) {
+                cartItem.quantity++;
+            } else {
+                this.cart.push({ ...product, quantity: 1 });
+            }
+            this.saveCart();
+        },
+        saveCart() {
+            localStorage.setItem("cart", JSON.stringify(this.cart));
+        },
+        handleFileUpload(event) {
+            this.selectedFile = event.target.files[0];
+            console.log("Selected file:", this.selectedFile);
+            this.convertToBase64(this.selectedFile);
+        },
+        convertToBase64(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.product.imageData = e.target.result.split(',')[1];
+                console.log("Base64 image data:", this.product.imageData);
+            };
+            reader.readAsDataURL(file);
+        },
+        async addProduct() {
+            try {
+                const formData = new FormData();
+                formData.append("name", this.product.name);
+                formData.append("model", this.product.model);
+                formData.append("price", this.product.price);
+                formData.append("imageData", this.product.imageData);
+
+                if (this.selectedFile) {
+                    formData.append("file", this.selectedFile);
+                } else {
+                    console.error("No file selected!");
+                    alert("Vælg venligst en fil før du uploader.");
+                    return;
+                }
+
+                const response = await axios.post(ApiUrl, formData, {
+                    headers: { 
+                        "Content-Type": "multipart/form-data",
+                        "Authorization": `Bearer ${this.token}`
+                    }
+                });
+
+                this.uploadMessage = "Produkt tilføjet succesfuldt!";
+                this.getAllProducts();
+            } catch (ex) {
+                console.error("Upload error:", ex.response ? ex.response.data : ex.message);
+                alert("Fejl ved upload af produkt.");
+            }
+        },
+        async login() {
+            try {
+                const response = await axios.post(AuthUrl, {
+                    username: this.user.username,
+                    password: this.user.password
+                }, {
+                    headers: { "Content-Type": "application/json" }
+                });
+
+                const data = response.data;
+                if (data.token) {
+                    this.token = data.token;
+                    localStorage.setItem("token", this.token);
+                    this.loginMessage = "Login successful!";
+                    this.isLoggedIn = true;
+                    this.isAdmin = true;
+                } else {
+                    this.loginMessage = "Login failed!";
+                }
+            } catch (ex) {
+                console.error("Login error:", ex);
+                this.loginMessage = "Login error!";
+            }
+        },
+        logout() {
+            this.isAdmin = false;
+            this.isLoggedIn = false;
+            this.user.username = "";
+            this.user.password = "";
+            this.loginMessage = "Logout successful!";
+            this.token = "";
+            localStorage.removeItem("token");
+        },
+        toggleLogin() {
+            this.showLogin = !this.showLogin;
+        },
+        checkToken() {
+            if (this.token) {
+                this.isLoggedIn = true;
             }
         },
     },

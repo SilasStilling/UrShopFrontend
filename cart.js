@@ -1,16 +1,23 @@
 Vue.createApp({
     data() {
         return {
-            cart: []
+            cart: JSON.parse(localStorage.getItem("cart")) || []
         };
     },
     computed: {
         totalPrice() {
             return this.cart.reduce((total, item) => total + item.price * item.quantity, 0);
+        },
+        totalCartItems() {
+            return this.cart.reduce((total, item) => total + item.quantity, 0);
         }
     },
     created() {
         this.loadCart();
+        window.addEventListener('storage', this.loadCart);
+    },
+    beforeUnmount() {
+        window.removeEventListener('storage', this.loadCart);
     },
     methods: {
         loadCart() {
