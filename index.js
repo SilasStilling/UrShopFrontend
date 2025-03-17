@@ -14,6 +14,7 @@ Vue.createApp({
             selectedFile: null,
             idToGetById: 0,
             showRegister: false,
+            showChangePassword: false,
             singleProduct: null,
             cart: JSON.parse(localStorage.getItem("cart")) || [],
             deleteId: 0,
@@ -75,6 +76,9 @@ Vue.createApp({
         },
         toggleRegister() {
             this.showRegister = !this.showRegister;
+        },
+        toggleChangePassword() {
+            this.showChangePassword = !this.showChangePassword;
         },
         async register() {
             try {
@@ -196,37 +200,27 @@ Vue.createApp({
             }
         },
         async changePassword() {
-            // Tjek om de nye password matcher
-            if (this.newPassword !== this.confirmPassword) {
-              this.passwordChangeError = "De nye password matcher ikke!";
-              return;
-            }
-        
-            // Tjek om det gamle password er korrekt
-            if (this.oldPassword !== this.user.password) {  // Forudsætter at `user.password` er det gamle password
-              this.passwordChangeError = "Det gamle password er forkert!";
-              return;
-            }
-        
+            // Implement change password logic here
+            // PUT er ikke implementeret endnu
             try {
-              // Her kan du lave et API-kald til at ændre passwordet i databasen
-              // For eksempel:
-              const response = await axios.post('/api/changePassword', {
-                oldPassword: this.oldPassword,
-                newPassword: this.newPassword
-              });
-        
-              if (response.data.success) {
-                this.passwordChangeMessage = "Dit password er blevet ændret!";
-                this.passwordChangeError = '';  // Rydder fejlbeskeden, hvis det lykkedes
-                this.oldPassword = this.newPassword = this.confirmPassword = '';  // Rydder inputfelterne
-              } else {
-                this.passwordChangeError = "Fejl ved ændring af password. Prøv igen.";
-              }
-            } catch (error) {
-              console.error(error);
-              this.passwordChangeError = "Der opstod en fejl. Prøv igen senere.";
+                const response = await axios.put('https://localhost:7214/api/Users/change-password', {
+                    oldPassword: this.oldPassword,
+                    newPassword: this.newPassword,
+                    confirmPassword: this.confirmPassword
+                }, {
+                    headers: { "Authorization": `Bearer ${this.token}` }
+                });
+
+                if (response.status === 200) {
+                    this.passwordChangeMessage = 'Password changed successfully!';
+                    this.showChangePassword = false;
+                } else {
+                    this.passwordChangeError = 'Password change failed!';
+                }
+            } catch (ex) {
+                console.error("Password change error:", ex);
+                this.passwordChangeError = 'Password change error!';
             }
-          },
+        },
     },
 }).mount('#app');
