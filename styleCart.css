@@ -107,3 +107,32 @@ img.product-image {
 .cart-links a:hover {
     text-decoration: underline;
 }
+
+.button-container {
+    display: flex;
+    justify-content: flex-end; /* Placerer knappen til venstre */
+}
+.go-back-btn {
+    background-color: #007bff; /* Blå baggrundsfarve */
+    color: white;              /* Hvid tekst */
+    border: none;              /* Ingen kant */
+    padding: 10px 20px;        /* Indvendig margin (top/bund, venstre/højre) */
+    font-size: 16px;           /* Størrelse på teksten */
+    border-radius: 5px;        /* Rundede hjørner */
+    cursor: pointer;          /* Ændrer markøren til en hånd, når man holder over knappen */
+    transition: background-color 0.3s ease; /* Gør baggrundsfarven smooth, når den ændres */
+}
+
+.go-back-btn:hover {
+    background-color: #0056b3; /* Mørkere blå, når musen holdes over knappen */
+}
+
+.checkout-btn {
+    background-color: #28a745; /* Grøn baggrundsfarve */
+    color: white;               /* Hvid tekst */
+    border: none;               /* Ingen kant */
+    padding: 10px 20px;         /* Indvendig margin (top/bund, venstre/højre) */
+    font-size: 16px;            /* Størrelse på teksten */
+    border-radius: 5px;         /* Rundede hjørner */
+    cursor: pointer;            /* Ændrer markøren til en hånd*/
+}
