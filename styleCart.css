@@ -127,7 +127,7 @@ img.product-image {
     background-color: #0056b3; /* Mørkere blå, når musen holdes over knappen */
 }
 
-.checkout-btn {
+.check-out-btn {
     background-color: #28a745; /* Grøn baggrundsfarve */
     color: white;               /* Hvid tekst */
     border: none;               /* Ingen kant */
