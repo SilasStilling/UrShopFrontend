@@ -27,7 +27,7 @@
                             <a class="nav-link" href="index.html">Produkter</a>
                             <a class="nav-link" href="cart.html">Indkøbskurv</a>
                             <a class="nav-link" href="#">Om os</a>
-                            <a class="nav-link" href="#">Startside</a>
+                            <a class="nav-link" href="startside.html">Startside</a>
                         </div>
                     </div>
                     <div>
@@ -98,12 +98,14 @@
             <button v-on:click="toggleLogin" class="btn btn-secondary w-100">Close</button>
             <div v-if="loginMessage" class="text-success text-center">{{ loginMessage }}</div>
         </div>
-
+        <br>
         <!-- Shop Now Button -->
-        <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
-            <a href="index.html" class="shop-button">Shop nu</a>
+        <div class="d-flex justify-content-center align-items-center">
+            <a href="index.html" class="btn btn-outline-success btn-lg">Shop nu</a>
         </div>
 
+<div style="height: 100vh;">
+</div>
         <!-- Footer -->
         <footer class="bg-dark text-white text-center py-3 w-100">
             <div class="container-fluid">
