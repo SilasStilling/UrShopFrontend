@@ -1,5 +1,6 @@
 const ApiUrl = 'https://localhost:7214/api/Products';
 const AuthUrl = 'https://localhost:7214/api/Users/login'; // URL til login endpoint
+const RegisterUrl = 'https://localhost:7214/api/Users';
 
 Vue.createApp({
     data() {
@@ -7,8 +8,16 @@ Vue.createApp({
             products: [],
             selectedFile: null,
             idToGetById: 0,
+            showRegister: false,
             singleProduct: null,
             deleteId: 0,
+            newUser: {
+                username: '',
+                email: '',
+                password: '',
+                role: ''
+            },
+            registerMessage: '',
             deleteMessage: "",
             uploadMessage: "",
             loginMessage: "",
@@ -55,6 +64,31 @@ Vue.createApp({
             } catch (ex) {
                 console.error("Error fetching products:", ex);
                 alert(ex.message);
+            }
+        },
+        toggleRegister() {
+            this.showRegister = !this.showRegister;
+        },
+        async register() {
+            try {
+                const response = await axios.post(RegisterUrl, {
+                    username: this.newUser.username,
+                    email: this.newUser.email,
+                    password: this.newUser.password,
+                    role: this.newUser.role
+                }, {
+                    headers: { "Content-Type": "application/json" }
+                });
+
+                if (response.status === 201) {
+                    this.registerMessage = 'User registered successfully!';
+                    this.showRegister = false;
+                } else {
+                    this.registerMessage = 'Registration failed!';
+                }
+            } catch (ex) {
+                console.error("Registration error:", ex);
+                this.registerMessage = 'Registration error!';
             }
         },
         handleFileUpload(event) {

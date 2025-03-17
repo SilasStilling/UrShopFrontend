@@ -34,9 +34,7 @@
                         fs-3"></i></a>
                     </div>
                     <div>
-                        <form class="d-flex">
-                            <button class="btn btn-secondary me-2" type="submit">Opret bruger</button>
-                        </form>
+                        <button v-on:click="toggleRegister" class="btn btn-secondary me-2" type="button">Opret bruger</button>
                     </div>
                     <div>
                         <button v-if="!isLoggedIn" v-on:click="toggleLogin" class="btn btn-secondary">Login</button>
@@ -45,6 +43,21 @@
                 </nav>
             </div>
         </header>
+
+<!-- Opret Bruger Section -->
+<div v-if="showRegister && !isLoggedIn" class="register-section card p-3 position-absolute bg-light shadow-lg" style="top: 80px; right: 20px; z-index: 100;">
+    <input type="text" id="newUsername" v-model="newUser.username" class="form-control mb-2" placeholder="Username" required>
+    <input type="email" id="newEmail" v-model="newUser.email" class="form-control mb-2" placeholder="Email" required>
+    <input type="password" id="newPassword" v-model="newUser.password" class="form-control mb-2" placeholder="Password" required>
+    <select v-model="newUser.role" class="form-control mb-2" required>
+        <option value="" disabled selected>Vælg rolle</option>
+        <option value="admin">Admin</option>
+        <option value="user">User</option>
+    </select>
+    <button v-on:click="register" class="btn btn-success w-100 mb-2">Submit</button>
+    <button v-on:click="toggleRegister" class="btn btn-secondary w-100">Close</button>
+    <div v-if="registerMessage" class="text-success text-center">{{ registerMessage }}</div>
+</div>
 
         <!-- Login Section -->
         <div v-if="showLogin && !isLoggedIn" class="login-section card p-3 position-absolute bg-light shadow-lg" style="top: 80px; right: 20px; z-index: 100;">
