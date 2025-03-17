@@ -39,6 +39,9 @@
                         
                     </div>
                     <div>
+                        <button v-if="isLoggedIn" v-on:click="toggleChangePassword" class="btn btn-secondary me-2" >Change Password</button>
+                    </div>
+                    <div>
                         <button v-on:click="toggleRegister" class="btn btn-secondary me-2" type="button">Opret bruger</button>
                     </div>
                     <div>
@@ -51,27 +54,29 @@
 
         
         
-        <!-- Change Password Section -->
-        <div v-if="isLoggedIn" class="change-password-section">
-            <h3>Ændre Password</h3>
-            <form @submit.prevent="changePassword">
-                <div class="mb-3">
-                    <label for="oldPassword" class="form-label">Gamle Password</label>
-                    <input type="password" id="oldPassword" v-model="oldPassword" class="form-control" required />
-                </div>
-                <div class="mb-3">
-                    <label for="newPassword" class="form-label">Nye Password</label>
-                    <input type="password" id="newPassword" v-model="newPassword" class="form-control" required />
-                </div>
-                <div class="mb-3">
-                    <label for="confirmPassword" class="form-label">Bekræft Nye Password</label>
-                    <input type="password" id="confirmPassword" v-model="confirmPassword" class="form-control" required />
-                </div>
-                <button type="submit" class="btn btn-primary">Ændre Password</button>
-            </form>
-            <div v-if="passwordChangeMessage" class="text-success mt-2">{{ passwordChangeMessage }}</div>
-            <div v-if="passwordChangeError" class="text-danger mt-2">{{ passwordChangeError }}</div>
+<!-- Change Password Section -->
+<div v-if="showChangePassword && isLoggedIn" class="change-password-section card p-3 position-absolute bg-light shadow-lg" style="top: 80px; right: 20px; z-index: 100;">
+    <h3>Ændre Password</h3>
+    <form @submit.prevent="changePassword">
+        <div class="mb-3">
+            <label for="oldPassword" class="form-label">Gamle Password</label>
+            <input type="password" id="oldPassword" v-model="oldPassword" class="form-control" required />
         </div>
+        <div class="mb-3">
+            <label for="newPassword" class="form-label">Nye Password</label>
+            <input type="password" id="newPassword" v-model="newPassword" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Bekræft Nye Password</label>
+            <input type="password" id="confirmPassword" v-model="confirmPassword" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Ændre Password</button>
+    </form>
+    <button v-on:click="toggleChangePassword" class="btn btn-secondary w-100 mt-2">Close</button>
+    <div v-if="passwordChangeMessage" class="text-success text-center mt-2">{{ passwordChangeMessage }}</div>
+    <div v-if="passwordChangeError" class="text-danger text-center mt-2">{{ passwordChangeError }}</div>
+</div>
+
 <!-- Opret Bruger Section -->
 <div v-if="showRegister && !isLoggedIn" class="register-section card p-3 position-absolute bg-light shadow-lg" style="top: 80px; right: 20px; z-index: 100;">
     <input type="text" id="newUsername" v-model="newUser.username" class="form-control mb-2" placeholder="Username" required>
