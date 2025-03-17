@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Indkøbskurv</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
     <script defer src="cart.js"></script>
-    <link rel="stylesheet" href="styles.css"> <!-- Hvis du har CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -35,7 +38,7 @@
                 <tbody>
                     <tr v-for="item in cart" :key="item.id">
                         <td>
-                            <img :src="item.imageData" alt="Product Image" class="product-image">
+                            <img :src="item.imageData" alt="Product Image" style="height: 100;" style="width: 100;" class="product-image">
                         </td>
                         <td>{{ item.model }}</td>
                         <td>{{ item.price }} DKK</td>
