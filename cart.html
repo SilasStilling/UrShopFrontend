@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indkøbskurv</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script defer src="cart.js"></script>
+    <link rel="stylesheet" href="styles.css"> <!-- Hvis du har CSS -->
+</head>
+
+<body>
+
+   
+    <div id="cart-app">
+        <h1>Din Indkøbskurv</h1>
+        <div v-if="cart.length === 0" class="cart-empty">
+            <p>Kurven er tom.</p>
+            <div class="cart-links">
+                <a href="index.html">Tilbage til butikken</a>
+            </div>
+        </div>
+        <div v-else>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produkt</th>
+                        <th>Model</th>
+                        <th>Pris</th>
+                        <th>Antal</th>
+                        <th>Handling</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in cart" :key="item.id">
+                        <td>
+                            <img :src="item.imageData" alt="Product Image" class="product-image">
+                        </td>
+                        <td>{{ item.model }}</td>
+                        <td>{{ item.price }} DKK</td>
+                        <td>
+                            <button @click="decreaseQuantity(item)">-</button>
+                            {{ item.quantity }}
+                            <button @click="increaseQuantity(item)">+</button>
+                        </td>
+                        <td>
+                            <button @click="removeFromCart(item.id)">❌ Fjern</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2>Samlet pris: {{ totalPrice }} DKK</h2>
+            <button @click="clearCart" class="clear-cart-btn">Tøm kurv</button>
+        </div>
+    </div>
+    

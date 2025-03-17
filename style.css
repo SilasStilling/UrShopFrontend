@@ -84,6 +84,8 @@ body {
     color: #152b1a;
 }
 
+
+
 .admin-toggle {
     position: absolute;
     top: 10px;
@@ -110,4 +112,13 @@ body {
 .login-section button {
     margin-left: 10px;
 }
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+
 

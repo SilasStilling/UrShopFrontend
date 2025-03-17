@@ -30,8 +30,13 @@
                         </div>
                     </div>
                     <div>
-                        <a href="cart.html" class="text-white me-3"><i class="bi bi-cart
-                        fs-3"></i></a>
+                        <a href="cart.html" class="text-white me-3 position-relative">
+                            <i class="bi bi-cart fs-3"></i>
+                            <span v-if="cart.length" class="position-absolute top-0 start-100 translate-middle badge bg-danger">
+                                {{ cart.length }}
+                            </span>
+                        </a>
+                        
                     </div>
                     <div>
                         <button v-on:click="toggleRegister" class="btn btn-secondary me-2" type="button">Opret bruger</button>

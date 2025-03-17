@@ -10,6 +10,7 @@ Vue.createApp({
             idToGetById: 0,
             showRegister: false,
             singleProduct: null,
+            cart: JSON.parse(localStorage.getItem("cart")) || [],
             deleteId: 0,
             newUser: {
                 username: '',
@@ -39,6 +40,7 @@ Vue.createApp({
     },
     created() {
         this.getAllProducts();
+        this.checkToken();
     },
     methods: {
         async getAllProducts() {
@@ -134,6 +136,19 @@ Vue.createApp({
                 alert("Fejl ved upload af produkt.");
             }
         },
+        addToCart(product) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            let existingProduct = cart.find(item => item.id === product.id);
+        
+            if (existingProduct) {
+                existingProduct.quantity++;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+        
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert(`${product.name} tilføjet til kurven!`);
+        },        
         async login() {
             try {
                 const response = await axios.post(AuthUrl, {
