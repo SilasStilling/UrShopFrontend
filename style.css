@@ -14,7 +14,6 @@ body {
     border: none;
     cursor: pointer;
     font-size: 16px;
-    margin-bottom: 20px;
 }
 
 .btn-secondary {
@@ -24,7 +23,6 @@ body {
     border: none;
     cursor: pointer;
     font-size: 14px;
-    margin-top: 10px;
 }
 
 .btn-primary:hover, .btn-secondary:hover {
