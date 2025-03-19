@@ -15,6 +15,7 @@ Vue.createApp({
             idToGetById: 0,
             showRegister: false,
             showChangePassword: false,
+            showCartDropdown: false,
             singleProduct: null,
             cart: JSON.parse(localStorage.getItem("cart")) || [],
             deleteId: 0,
@@ -49,6 +50,9 @@ Vue.createApp({
         this.checkToken();
     },
     computed: {
+        totalPrice() {
+            return this.cart.reduce((total, item) => total + item.price * item.quantity, 0);
+        },
         totalCartItems() {
             return this.cart.reduce((total, item) => total + item.quantity, 0);
         }
@@ -81,6 +85,9 @@ Vue.createApp({
         },
         toggleRegister() {
             this.showRegister = !this.showRegister;
+        },
+        toggleCartDropdown() {
+            this.showCartDropdown = !this.showCartDropdown;
         },
         toggleChangePassword() {
             this.showChangePassword = !this.showChangePassword;
