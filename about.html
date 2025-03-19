@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="app" class="bg">
+    <div id="app" class="aboutBg">
         <!-- Header -->
         <header class="bg-dark text-white py-3 w-100">
             <div class="container-fluid">
@@ -24,10 +24,10 @@
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                         <div class="navbar-nav justify-content-center">
                             <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-                            <a class="nav-link" href="index.html">Produkter</a>
+                            <a class="nav-link" href="products.html">Produkter</a>
                             <a class="nav-link" href="cart.html">Indkøbskurv</a>
-                            <a class="nav-link" href="#">Om os</a>
-                            <a class="nav-link" href="startside.html">Startside</a>
+                            <a class="nav-link" href="about.html">Om os</a>
+                            <a class="nav-link" href="admin.html">Admin</a>
                         </div>
                     </div>
                     <div>
@@ -51,6 +51,16 @@
                 </nav>
             </div>
         </header>
+
+        <!-- About Us Section -->
+        <section class="about-us-section py-5 text-white">
+            <div class="container">
+            <h2 class="text-center mb-4">Om os</h2>
+            <p>Velkommen til Ur Shoppen! Vi er en online butik dedikeret til at tilbyde et bredt udvalg af ure til enhver smag og lejlighed. Vores mission er at give vores kunder en nem og bekvem shoppingoplevelse med produkter af høj kvalitet og fremragende kundeservice.</p>
+            <p>Vi startede vores rejse i 2025 med en passion for ure og et ønske om at dele denne passion med verden. Hos Ur Shoppen finder du alt fra klassiske og tidløse designs til moderne og trendy ure. Vi arbejder tæt sammen med anerkendte mærker og leverandører for at sikre, at vores sortiment altid er opdateret med de nyeste trends og teknologier.</p>
+            <p>Tak fordi du besøger vores hjemmeside. Vi håber, at du finder det perfekte ur, der passer til din stil og behov. Hvis du har spørgsmål eller brug for hjælp, er du altid velkommen til at kontakte os.</p>
+            </div>
+        </section>
 
         <!-- Change Password Section -->
         <div v-if="showChangePassword && isLoggedIn" class="change-password-section card p-3 position-absolute bg-light shadow-lg" style="top: 80px; right: 20px; z-index: 100;">
@@ -99,13 +109,9 @@
             <div v-if="loginMessage" class="text-success text-center">{{ loginMessage }}</div>
         </div>
         <br>
-        <!-- Shop Now Button -->
-        <div class="d-flex justify-content-center align-items-center">
-            <a href="index.html" class="btn btn-outline-success btn-lg">Shop nu</a>
-        </div>
 
-<div style="height: 100vh;">
-</div>
+        <div style="height: 100vh;">
+        </div>
         <!-- Footer -->
         <footer class="bg-dark text-white text-center py-3 w-100">
             <div class="container-fluid">
