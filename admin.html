@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ur Shoppen</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -143,11 +143,30 @@
             </div>
         </div>
 
-        <!-- Update -->
-        <h2>Rediger Produkter</h2>
+<!-- Update Section -->
+<div class="section container mt-5">
+    <h2>Rediger Produkter</h2>
+    <div v-for="product in products" :key="product.id" class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <input v-model="product.name" placeholder="Produktnavn" type="text" class="form-control mb-2" />
+            <input v-model="product.model" placeholder="Produktmodel" type="text" class="form-control mb-2" />
+            <input v-model="product.price" placeholder="Pris" type="number" class="form-control mb-2" />
+            <button @click="updateProduct(product)" class="btn btn-primary">Opdater</button>
+        </div>
+    </div>
+</div>
 
-        <!-- Delete -->
-        <h2>Slet Produkter</h2>
+<!-- Delete Section -->
+<div class="section container mt-5">
+    <h2>Slet Produkter</h2>
+    <ul class="list-group">
+        <li v-for="product in products" :key="product.id" class="list-group-item d-flex justify-content-between align-items-center">
+            {{ product.name }}
+            <button @click="deleteProduct(product.id)" class="btn btn-danger">Slet</button>
+        </li>
+    </ul>
+</div>
 
 <div style="height: 100vh;">
 </div>
