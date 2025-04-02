@@ -136,24 +136,6 @@
                 </div>
             </div>  
             <div v-else>Ingen produkter tilgængelige</div>
-            
-            <div class="mt-5">
-                <h2>Tilføj Produkter (admin only)</h2>
-                <label for="fileInput" class="btn btn-primary">
-                    <i class="bi bi-upload"></i> Vælg Fil
-                    <input type="file" id="fileInput" @change="handleFileUpload" style="display: none;">
-                </label>
-                <span v-if="selectedFile" class="ml-2 text-muted">{{ selectedFile.name }}</span>
-                <input v-model="product.name" placeholder="Produktnavn" type="text" class="form-control mt-2" />
-                <input v-model="product.model" placeholder="Produktmodel" type="text" class="form-control mt-2" />
-                <input v-model="product.price" placeholder="Pris" type="number" class="form-control mt-2" />
-                <div v-if="product.imageData" class="mt-2">
-                    <img :src="product.imageData" alt="Selected Image" class="img-fluid" />
-                </div>
-                <button @click="addProduct" class="btn btn-success mt-2">
-                    <i class="bi bi-cloud-upload"></i> Upload
-                </button>
-                <div v-if="uploadMessage" class="text-success mt-2">{{ uploadMessage }}</div>
             </div>
         </div>
     </div>
