@@ -115,8 +115,6 @@ Vue.createApp({
             }
         },
         async changePassword() {
-            // Implement change password logic here
-            // Example:
             try {
                 const response = await axios.put('https://localhost:7214/api/Users/change-password', {
                     oldPassword: this.oldPassword,
@@ -234,11 +232,9 @@ Vue.createApp({
             const data = response.data;
     
             if (data.token) {
-                // Gem token i localStorage
                 this.token = data.token;
                 localStorage.setItem("token", this.token);
     
-                // Dekod token for at få brugerens rolle
                 const payload = JSON.parse(atob(this.token.split('.')[1]));
     
                 this.isLoggedIn = true;
