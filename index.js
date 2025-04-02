@@ -222,45 +222,60 @@ Vue.createApp({
             alert('Kunne ikke slette produktet.');
         }
     },
-        async login() {
-            try {
-                const response = await axios.post(AuthUrl, {
-                    username: this.user.username,
-                    password: this.user.password
-                }, {
-                    headers: { "Content-Type": "application/json" }
-                });
-
-                const data = response.data;
-                if (data.token) {
-                    this.token = data.token;
-                    localStorage.setItem("token", this.token);
-                    this.loginMessage = "Login successful!";
-                    this.isLoggedIn = true;
-                    this.isAdmin = true;
-                } else {
-                    this.loginMessage = "Login failed!";
-                }
-            } catch (ex) {
-                console.error("Login error:", ex);
-                this.loginMessage = "Login error!";
+    async login() {
+        try {
+            const response = await axios.post(AuthUrl, {
+                username: this.user.username,
+                password: this.user.password
+            }, {
+                headers: { "Content-Type": "application/json" }
+            });
+    
+            const data = response.data;
+    
+            if (data.token) {
+                // Gem token i localStorage
+                this.token = data.token;
+                localStorage.setItem("token", this.token);
+    
+                // Dekod token for at få brugerens rolle
+                const payload = JSON.parse(atob(this.token.split('.')[1]));
+    
+                this.isLoggedIn = true;
+                this.isAdmin = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]?.toLowerCase() === 'admin';
+    
+                this.loginMessage = "Login successful!";
+            } else {
+                this.loginMessage = "Login failed!";
             }
-        },
-        logout() {
-            this.isAdmin = false;
-            this.isLoggedIn = false;
-            this.user.username = "";
-            this.user.password = "";
-            this.loginMessage = "Logout successful!";
-            this.token = "";
-            localStorage.removeItem("token");
-        },
+        } catch (ex) {
+            console.error("Login error:", ex);
+            this.loginMessage = "Login error!";
+        }
+    },
+    logout() {
+        this.isAdmin = false;
+        this.isLoggedIn = false;
+        this.user.username = "";
+        this.user.password = "";
+        this.loginMessage = "Logout successful!";
+        this.token = "";
+        localStorage.removeItem("token");
+    },
         toggleLogin() {
             this.showLogin = !this.showLogin;
         },
-        checkToken() {
-            if (this.token) {
+        async checkToken() {
+            if (!this.token) return;
+        
+            try {
+                const payload = JSON.parse(atob(this.token.split('.')[1]));
                 this.isLoggedIn = true;
+                this.isAdmin = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]?.toLowerCase() === 'admin';
+            } catch (error) {
+                console.error("Error decoding token:", error);
+                this.isLoggedIn = false;
+                this.isAdmin = false;
             }
         },
     },
