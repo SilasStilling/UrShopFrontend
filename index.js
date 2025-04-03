@@ -43,11 +43,24 @@ Vue.createApp({
             showLogin: false,
             isLoggedIn: false,
             isAdmin: false,
+            isLockedOut: false,
+            remainingTime: 0,
+            cart: [],  
+            payment: {
+                cardNumber: '',
+                expiryDate: '',
+                cvv: ''
+            }
         };
     },
     created() {
         this.getAllProducts();
         this.checkToken();
+        this.loadCart();
+        window.addEventListener('storage', this.loadCart);
+    },
+    beforeUnmount() {
+        window.removeEventListener('storage', this.loadCart);
     },
     computed: {
         totalPrice() {
@@ -212,74 +225,93 @@ Vue.createApp({
                 alert("Fejl ved upload af produkt.");
             }
         },
-            async updateProduct(product, file) {
-                try {
-                    let formData = new FormData();
-                    formData.append("name", product.name);
-                    formData.append("model", product.model);
-                    formData.append("price", product.price);
-                    if (file) formData.append("file", file);
-            
-                    const response = await axios.put(
-                        `https://localhost:7214/api/Products/${product.id}`, 
-                        formData, 
-                        { headers: { "Content-Type": "multipart/form-data" } }
-                    );
-                    alert("Produkt opdateret!");
-                } catch (error) {
-                    console.error("Fejl ved opdatering af produkt:", error);
-                    alert("Kunne ikke opdatere produktet.");
+        async updateProduct(product, file) {
+            try {
+                let formData = new FormData();
+                formData.append("name", product.name);
+                formData.append("model", product.model);
+                formData.append("price", product.price);
+                if (file) formData.append("file", file);
+        
+                const response = await axios.put(
+                    `https://localhost:7214/api/Products/${product.id}`, 
+                    formData, 
+                    { headers: { "Content-Type": "multipart/form-data" } }
+                );
+                alert("Produkt opdateret!");
+            } catch (error) {
+                console.error("Fejl ved opdatering af produkt:", error);
+                alert("Kunne ikke opdatere produktet.");
+            }
+        },
+        async deleteProduct(productId) {
+            try {
+                const response = await axios.delete(`https://localhost:7214/api/Products/${productId}`);
+                this.products = this.products.filter(product => product.id !== productId);
+                alert('Produkt slettet!');
+            } catch (error) {
+                console.error('Fejl ved sletning af produkt:', error);
+                alert('Kunne ikke slette produktet.');
+            }
+        },
+        async login() {
+            if (this.isLockedOut) return; // Stop login hvis brugeren er låst ude
+        
+            try {
+                const response = await axios.post(AuthUrl, {
+                    username: this.user.username,
+                    password: this.user.password
+                }, {
+                    headers: { "Content-Type": "application/json" }
+                });
+        
+                const data = response.data;
+        
+                if (data.token) {
+                    this.token = data.token;
+                    localStorage.setItem("token", this.token);
+        
+                    const payload = JSON.parse(atob(this.token.split('.')[1]));
+        
+                    this.isLoggedIn = true;
+                    this.isAdmin = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]?.toLowerCase() === 'admin';
+        
+                    this.loginMessage = "Login successful!";
+                } else {
+                    this.loginMessage = "Login failed!";
+                }
+            } catch (ex) {
+                if (ex.response && ex.response.status === 429) {
+                    // Brugeren har lavet for mange forsøg
+                    this.isLockedOut = true;
+                    this.remainingTime = 300; // 5 minutter (300 sekunder)
+                    this.startCountdown();
+                    this.loginMessage = "For mange forkerte forsøg! Prøv igen om 5 minutter.";
+                } else {
+                    console.error("Login error:", ex);
+                    this.loginMessage = "Login error!";
                 }
             }
-            ,
-    async deleteProduct(productId) {
-        try {
-            const response = await axios.delete(`https://localhost:7214/api/Products/${productId}`);
-            this.products = this.products.filter(product => product.id !== productId);
-            alert('Produkt slettet!');
-        } catch (error) {
-            console.error('Fejl ved sletning af produkt:', error);
-            alert('Kunne ikke slette produktet.');
-        }
-    },
-    async login() {
-        try {
-            const response = await axios.post(AuthUrl, {
-                username: this.user.username,
-                password: this.user.password
-            }, {
-                headers: { "Content-Type": "application/json" }
-            });
-    
-            const data = response.data;
-    
-            if (data.token) {
-                this.token = data.token;
-                localStorage.setItem("token", this.token);
-    
-                const payload = JSON.parse(atob(this.token.split('.')[1]));
-    
-                this.isLoggedIn = true;
-                this.isAdmin = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]?.toLowerCase() === 'admin';
-    
-                this.loginMessage = "Login successful!";
-            } else {
-                this.loginMessage = "Login failed!";
-            }
-        } catch (ex) {
-            console.error("Login error:", ex);
-            this.loginMessage = "Login error!";
-        }
-    },
-    logout() {
-        this.isAdmin = false;
-        this.isLoggedIn = false;
-        this.user.username = "";
-        this.user.password = "";
-        this.loginMessage = "Logout successful!";
-        this.token = "";
-        localStorage.removeItem("token");
-    },
+        },
+        startCountdown() {
+            const interval = setInterval(() => {
+                this.remainingTime--;
+                if (this.remainingTime <= 0) {
+                    clearInterval(interval);
+                    this.isLockedOut = false;
+                    this.loginMessage = "";
+                }
+            }, 1000);
+        },
+        logout() {
+            this.isAdmin = false;
+            this.isLoggedIn = false;
+            this.user.username = "";
+            this.user.password = "";
+            this.loginMessage = "Logout successful!";
+            this.token = "";
+            localStorage.removeItem("token");
+        },
         toggleLogin() {
             this.showLogin = !this.showLogin;
         },
@@ -308,6 +340,68 @@ Vue.createApp({
             if (strength === 2) return { text: "Middel", color: "yellow" };
             if (strength === 3) return { text: "Stærkt", color: "lightgreen" };
             return { text: "Meget stærkt", color: "green" };
+        },
+        loadCart() {
+            const savedCart = localStorage.getItem("cart");
+            if (savedCart) {
+                this.cart = JSON.parse(savedCart);
+            }
+        },
+        saveCart() {
+            localStorage.setItem("cart", JSON.stringify(this.cart));
+        },
+        increaseQuantity(item) {
+            item.quantity++;
+            this.saveCart();
+        },
+        decreaseQuantity(item) {
+            if (item.quantity > 1) {
+                item.quantity--;
+            } else {
+                this.removeFromCart(item.id);
+            }
+            this.saveCart();
+        },
+        removeFromCart(productId) {
+            this.cart = this.cart.filter(item => item.id !== productId);
+            this.saveCart();
+        },
+        clearCart() {
+            this.cart = [];
+            localStorage.removeItem("cart");
+        },
+                // Håndter betaling
+                handlePayment() {
+                    // Før du udfører betalingen, skal du validere kortoplysningerne.
+                    if (this.validatePaymentDetails()) {
+                        // Send betalingsanmodning til din backend
+                        axios.post('/api/payment', {
+                            cart: this.cart,
+                            paymentDetails: this.payment
+                        })
+                        .then(response => {
+                            // Hvis betalingen var vellykket, vis takkeside eller besked
+                            alert("Betaling gennemført succesfuldt!");
+                            window.location.href = 'thank-you.html';  // Redirect til takkeside
+                        })
+                        .catch(error => {
+                            console.error("Fejl under betaling:", error);
+                            alert("Betaling mislykkedes. Prøv venligst igen.");
+                        });
+                    }
+                },
+                        // Valider betalingsoplysninger
+        validatePaymentDetails() {
+            if (!this.payment.cardNumber || !this.payment.expiryDate || !this.payment.cvv) {
+                alert("Venligst udfyld alle betalingsoplysninger.");
+                return false;
+            }
+            // Tilføj mere validering af kortnumre, udløbsdato, etc.
+            return true;
+        }, 
+        mounted() {
+            // Hent kurvdata fra localStorage eller API
+            this.cart = JSON.parse(localStorage.getItem('cart')) || [];
         }
         
     },

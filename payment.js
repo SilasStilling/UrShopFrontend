@@ -1,4 +1,4 @@
-const stripe = require('stripe')('your-stripe-secret-key'); // Din Stripe secret key
+const stripe = require('stripe')('sk_test_51R9l9XFd6xDZ8vdxpN8oC8879tUKJm064ot5NiC4oCEv3ReSofX4e3IcxZ3GetKlXqng0mpqcN8haP7CHd0w9Opo00AZJOZLJ3'); // Din Stripe secret key
 const express = require('express');
 const app = express();
 
