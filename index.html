@@ -63,7 +63,12 @@
                 <div class="mb-3">
                     <label for="newPassword" class="form-label">Nye Password</label>
                     <input type="password" id="newPassword" v-model="newPassword" class="form-control" required />
-                </div>
+                    <div v-if="passwordStrengthMessage" :style="{ color: passwordStrengthMessage.color }" class="mt-1">
+                        {{ passwordStrengthMessage.text }}
+                      </div>
+                      
+                      
+                </div>                
                 <div class="mb-3">
                     <label for="confirmPassword" class="form-label">Bekræft Nye Password</label>
                     <input type="password" id="confirmPassword" v-model="confirmPassword" class="form-control" required />
@@ -80,6 +85,9 @@
             <input type="text" id="newUsername" v-model="newUser.username" class="form-control mb-2" placeholder="Username" required>
             <input type="email" id="newEmail" v-model="newUser.email" class="form-control mb-2" placeholder="Email" required>
             <input type="password" id="newPassword" v-model="newUser.password" class="form-control mb-2" placeholder="Password" required>
+            <div v-if="passwordStrengthMessage" :style="{ color: passwordStrengthMessage.color }">
+                {{ passwordStrengthMessage.text }}
+            </div>            
             <select v-model="newUser.role" class="form-control mb-2" required>
                 <option value="" disabled selected>Vælg rolle</option>
                 <option value="admin">Admin</option>

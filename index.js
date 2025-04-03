@@ -58,7 +58,22 @@ Vue.createApp({
         },
         totalCartItems() {
             return this.cart.reduce((total, item) => total + item.quantity, 0);
-        }
+        },
+        passwordStrengthMessage() {
+            const password = this.showRegister ? this.newUser.password : this.newPassword;
+            if (!password) return null;
+        
+            const length = password.length;
+            if (length < 4) {
+              return { text: "Meget svagt", color: "red" };
+            } else if (length < 8) {
+              return { text: "Svagt", color: "orange" };
+            } else if (length < 12) {
+              return { text: "Medium", color: "blue" };
+            } else {
+              return { text: "Stærkt", color: "green" };
+            }
+          }
     },
     methods: {
         async getAllProducts() {
@@ -116,6 +131,13 @@ Vue.createApp({
                 if (response.status === 201) {
                     this.registerMessage = 'User registered successfully!';
                     this.showRegister = false;
+                    
+                    this.$nextTick(() => {
+                        this.newUser.username = '';
+                        this.newUser.email = '';
+                        this.newUser.password = '';
+                        this.newUser.role = '';
+                    });
                 } else {
                     this.registerMessage = 'Registration failed!';
                 }
@@ -294,5 +316,81 @@ Vue.createApp({
                 this.isAdmin = false;
             }
         },
+        checkPasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+        
+            if (strength === 0) return { text: "Meget svagt", color: "red" };
+            if (strength === 1) return { text: "Svagt", color: "orange" };
+            if (strength === 2) return { text: "Middel", color: "yellow" };
+            if (strength === 3) return { text: "Stærkt", color: "lightgreen" };
+            return { text: "Meget stærkt", color: "green" };
+        },
+        loadCart() {
+            const savedCart = localStorage.getItem("cart");
+            if (savedCart) {
+                this.cart = JSON.parse(savedCart);
+            }
+        },
+        saveCart() {
+            localStorage.setItem("cart", JSON.stringify(this.cart));
+        },
+        increaseQuantity(item) {
+            item.quantity++;
+            this.saveCart();
+        },
+        decreaseQuantity(item) {
+            if (item.quantity > 1) {
+                item.quantity--;
+            } else {
+                this.removeFromCart(item.id);
+            }
+            this.saveCart();
+        },
+        removeFromCart(productId) {
+            this.cart = this.cart.filter(item => item.id !== productId);
+            this.saveCart();
+        },
+        clearCart() {
+            this.cart = [];
+            localStorage.removeItem("cart");
+        },
+                // Håndter betaling
+                handlePayment() {
+                    // Før du udfører betalingen, skal du validere kortoplysningerne.
+                    if (this.validatePaymentDetails()) {
+                        // Send betalingsanmodning til din backend
+                        axios.post('/api/payment', {
+                            cart: this.cart,
+                            paymentDetails: this.payment
+                        })
+                        .then(response => {
+                            // Hvis betalingen var vellykket, vis takkeside eller besked
+                            alert("Betaling gennemført succesfuldt!");
+                            window.location.href = 'thank-you.html';  // Redirect til takkeside
+                        })
+                        .catch(error => {
+                            console.error("Fejl under betaling:", error);
+                            alert("Betaling mislykkedes. Prøv venligst igen.");
+                        });
+                    }
+                },
+                        // Valider betalingsoplysninger
+        validatePaymentDetails() {
+            if (!this.payment.cardNumber || !this.payment.expiryDate || !this.payment.cvv) {
+                alert("Venligst udfyld alle betalingsoplysninger.");
+                return false;
+            }
+            // Tilføj mere validering af kortnumre, udløbsdato, etc.
+            return true;
+        }, 
+        mounted() {
+            // Hent kurvdata fra localStorage eller API
+            this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+        }
+        
     },
 }).mount('#app');
