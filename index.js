@@ -13,9 +13,6 @@ Vue.createApp({
             products: [],
             selectedFile: null,
             idToGetById: 0,
-            nameToGetBy: "",
-            allProducts: [],
-            name: null,
             showRegister: false,
             showChangePassword: false,
             showCartDropdown: false,
@@ -46,11 +43,23 @@ Vue.createApp({
             showLogin: false,
             isLoggedIn: false,
             isAdmin: false,
+            isLockedOut: false,
+            remainingTime: 0,
+            payment: {
+                cardNumber: '',
+                expiryDate: '',
+                cvv: ''
+            }
         };
     },
     created() {
         this.getAllProducts();
         this.checkToken();
+        this.loadCart();
+        window.addEventListener('storage', this.loadCart);
+    },
+    beforeUnmount() {
+        window.removeEventListener('storage', this.loadCart);
     },
     computed: {
         totalPrice() {
@@ -253,6 +262,8 @@ Vue.createApp({
         }
     },
     async login() {
+        if (this.isLockedOut) return; // Stop login hvis brugeren er låst ude
+    
         try {
             const response = await axios.post(AuthUrl, {
                 username: this.user.username,
@@ -277,8 +288,16 @@ Vue.createApp({
                 this.loginMessage = "Login failed!";
             }
         } catch (ex) {
-            console.error("Login error:", ex);
-            this.loginMessage = "Login error!";
+            if (ex.response && ex.response.status === 429) {
+                // Brugeren har lavet for mange forsøg
+                this.isLockedOut = true;
+                this.remainingTime = 300; // 5 minutter (300 sekunder)
+                this.startCountdown();
+                this.loginMessage = "For mange forkerte forsøg! Prøv igen om 5 minutter.";
+            } else {
+                console.error("Login error:", ex);
+                this.loginMessage = "Login error!";
+            }
         }
     },
     logout() {
@@ -390,7 +409,17 @@ Vue.createApp({
         mounted() {
             // Hent kurvdata fra localStorage eller API
             this.cart = JSON.parse(localStorage.getItem('cart')) || [];
-        }
+        },
+        startCountdown() {
+            const interval = setInterval(() => {
+                this.remainingTime--;
+                if (this.remainingTime <= 0) {
+                    clearInterval(interval);
+                    this.isLockedOut = false;
+                    this.loginMessage = "";
+                }
+            }, 1000);
+        },
         
     },
 }).mount('#app');
