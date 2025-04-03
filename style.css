@@ -305,14 +305,16 @@ img.product-image {
 
 /* Checkout table */
 table {
-    width: 100%;
+    width: 50%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
 table th, table td {
     padding: 10px;
-    text-align: left;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
     border-bottom: 1px solid #ddd;
 }
 
@@ -409,4 +411,21 @@ table img {
     }
 
    
+}
+
+.checkout-container {
+    width: 50%;
+    margin: 0 auto; /* Centrerer containeren */
+    padding: 20px;
+    background-color: white; /* Baggrundsfarve for at skille sig ud */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Let skygge for at fremhæve */
+}
+
+.checkout-container table {
+    width: 100%; /* Sørger for, at tabellen fylder hele containerens bredde */
+}
+
+.checkout-container .payment-form {
+    width: 100%; /* Sørger for, at betalingsformularen fylder hele containerens bredde */
 }
