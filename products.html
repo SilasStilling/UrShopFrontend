@@ -119,17 +119,19 @@
 
         <!-- Main Content -->
         <div class="section container mt-5">
-            <h2>Produkter</h2>    
+            <h2>Produkter</h2>  <br>     
             
          <!-- Ryk eventuelt den her kode op under Get all, da filtreringen og sorteringen passer hertil -->
         
-         <h1>Sortering + Filtrering</h1>
          <!-- Filtrering -->
-         <input placeholder="Filter by Name" type="text" v-model="name" v-on:keyup.enter="filterByName(name)" class="form-control mb-3">
-         <button v-on:click="filterByName(name)" class="btn btn-primary mb-3">
-             Filter
-         </button>
+         <div class="d-flex mb-3">
+            <input placeholder="Search by Name" type="text" v-model="name" v-on:keyup.enter="filterByName(name)" class="form-control me-2">
+            <button v-on:click="filterByName(name)" class="btn btn-primary">
+                Search
+            </button>
+        </div>
 
+        <br> <br>
          <!-- Sortering -->
 
          <div class="mb-3">
@@ -137,6 +139,8 @@
             <button v-on:click="sortByPriceAscending" class="btn btn-secondary me-2">Sort by Price (Low to High)</button>
             <button v-on:click="sortByPriceDescending" class="btn btn-secondary">Sort by Price (High to Low)</button>
         </div>
+
+        <br>
 
             <div class="row mt-3" v-if="products.length">
                 <div class="col-md-4 mb-4" v-for="product in products" :key="product.id">
