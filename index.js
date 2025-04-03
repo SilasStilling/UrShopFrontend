@@ -45,11 +45,22 @@ Vue.createApp({
             isAdmin: false,
             isLockedOut: false,
             remainingTime: 0,
+            cart: [],  
+            payment: {
+                cardNumber: '',
+                expiryDate: '',
+                cvv: ''
+            }
         };
     },
     created() {
         this.getAllProducts();
         this.checkToken();
+        this.loadCart();
+        window.addEventListener('storage', this.loadCart);
+    },
+    beforeUnmount() {
+        window.removeEventListener('storage', this.loadCart);
     },
     computed: {
         totalPrice() {
@@ -295,5 +306,68 @@ Vue.createApp({
                 this.isAdmin = false;
             }
         },
+        loadCart() {
+            const savedCart = localStorage.getItem("cart");
+            if (savedCart) {
+                this.cart = JSON.parse(savedCart);
+            }
+        },
+        saveCart() {
+            localStorage.setItem("cart", JSON.stringify(this.cart));
+        },
+        increaseQuantity(item) {
+            item.quantity++;
+            this.saveCart();
+        },
+        decreaseQuantity(item) {
+            if (item.quantity > 1) {
+                item.quantity--;
+            } else {
+                this.removeFromCart(item.id);
+            }
+            this.saveCart();
+        },
+        removeFromCart(productId) {
+            this.cart = this.cart.filter(item => item.id !== productId);
+            this.saveCart();
+        },
+        clearCart() {
+            this.cart = [];
+            localStorage.removeItem("cart");
+        },
+                // Håndter betaling
+                handlePayment() {
+                    // Før du udfører betalingen, skal du validere kortoplysningerne.
+                    if (this.validatePaymentDetails()) {
+                        // Send betalingsanmodning til din backend
+                        axios.post('/api/payment', {
+                            cart: this.cart,
+                            paymentDetails: this.payment
+                        })
+                        .then(response => {
+                            // Hvis betalingen var vellykket, vis takkeside eller besked
+                            alert("Betaling gennemført succesfuldt!");
+                            window.location.href = 'thank-you.html';  // Redirect til takkeside
+                        })
+                        .catch(error => {
+                            console.error("Fejl under betaling:", error);
+                            alert("Betaling mislykkedes. Prøv venligst igen.");
+                        });
+                    }
+                },
+                        // Valider betalingsoplysninger
+        validatePaymentDetails() {
+            if (!this.payment.cardNumber || !this.payment.expiryDate || !this.payment.cvv) {
+                alert("Venligst udfyld alle betalingsoplysninger.");
+                return false;
+            }
+            // Tilføj mere validering af kortnumre, udløbsdato, etc.
+            return true;
+        }, 
+        mounted() {
+            // Hent kurvdata fra localStorage eller API
+            this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+        }
+        
     },
 }).mount('#app');

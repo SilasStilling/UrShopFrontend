@@ -161,3 +161,252 @@ body {
     filter: blur(200px);
     z-index: -1;
 }
+
+
+/* cart */
+
+
+#cart-app {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+}
+
+table td {
+    background-color: #f9f9f9;
+    font-size: 14px;
+}
+
+button {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cart-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: #28a745;
+}
+
+.cart-button:hover {
+    color: #152b1a;
+}
+
+img.product-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.clear-cart-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.clear-cart-btn:hover {
+    background-color: #c82333;
+}
+
+.cart-empty {
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+}
+
+.cart-links a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 16px;
+}
+
+.cart-links a:hover {
+    text-decoration: underline;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end; /* Placerer knappen til venstre */
+}
+.go-back-btn {
+    background-color: #007bff; /* Blå baggrundsfarve */
+    color: white;              /* Hvid tekst */
+    border: none;              /* Ingen kant */
+    padding: 10px 20px;        /* Indvendig margin (top/bund, venstre/højre) */
+    font-size: 16px;           /* Størrelse på teksten */
+    border-radius: 5px;        /* Rundede hjørner */
+    cursor: pointer;          /* Ændrer markøren til en hånd, når man holder over knappen */
+    transition: background-color 0.3s ease; /* Gør baggrundsfarven smooth, når den ændres */
+}
+
+.go-back-btn:hover {
+    background-color: #0056b3; /* Mørkere blå, når musen holdes over knappen */
+}
+
+.check-out-btn {
+    background-color: #28a745; /* Grøn baggrundsfarve */
+    color: white;               /* Hvid tekst */
+    border: none;               /* Ingen kant */
+    padding: 10px 20px;         /* Indvendig margin (top/bund, venstre/højre) */
+    font-size: 16px;            /* Størrelse på teksten */
+    border-radius: 5px;         /* Rundede hjørner */
+    cursor: pointer;            /* Ændrer markøren til en hånd*/
+}
+
+/* checkout */
+
+
+
+.cart-empty p {
+    color: #ff0000;
+    font-size: 18px;
+}
+
+/* Checkout table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+table td {
+    background-color: #f9f9f9;
+}
+
+table img {
+    max-width: 50px;
+    height: auto;
+    border-radius: 4px;
+}
+
+/* Payment Form */
+.payment-form {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.payment-form h4 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.payment-form .form-group {
+    margin-bottom: 15px;
+}
+
+.payment-form label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.payment-form input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.payment-form input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.payment-form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #28a745;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.payment-form button:hover {
+    background-color: #218838;
+}
+
+/* Responsivitet */
+@media screen and (max-width: 768px) {
+    #app {
+        padding: 15px;
+    }
+
+    .payment-form {
+        padding: 15px;
+    }
+
+    table th, table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .payment-form input {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .payment-form button {
+        font-size: 16px;
+    }
+
+   
+}
