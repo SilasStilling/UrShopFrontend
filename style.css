@@ -429,3 +429,22 @@ table img {
 .checkout-container .payment-form {
     width: 100%; /* Sørger for, at betalingsformularen fylder hele containerens bredde */
 }
+
+.cart-container {
+    width: 50%;
+    margin: 0 auto; /* Centrerer containeren */
+    padding: 20px;
+    background-color: white; /* Baggrundsfarve for at skille sig ud */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Let skygge for at fremhæve */
+}
+
+.cart-container table {
+    width: 100%; /* Sørger for, at tabellen fylder hele containerens bredde */
+}
+
+.cart-container .cart-empty {
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+}

@@ -116,51 +116,53 @@
                     <button v-on:click="toggleLogin" class="btn btn-secondary w-100">Close</button>
                     <div v-if="loginMessage" class="text-success text-center">{{ loginMessage }}</div>
                 </div>
-        
-        <h1>Din Indkøbskurv</h1>
-        <div v-if="cart.length === 0" class="cart-empty">
-            <p>Kurven er tom.</p>
-            <div class="cart-links">
-                <a href="index.html">Tilbage til butikken</a>
-            </div>
-        </div>
-        <div v-else>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Produkt</th>
-                        <th>Model</th>
-                        <th>Pris</th>
-                        <th>Antal</th>
-                        <th>Handling</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="item in cart" :key="item.id">
-                        <td>
-                            <img :src="item.imageData" alt="Product Image" style="height: 100;" style="width: 100;" class="product-image">
-                        </td>
-                        <td>{{ item.model }}</td>
-                        <td>{{ item.price }} DKK</td>
-                        <td>
-                            <button @click="decreaseQuantity(item)">-</button>
-                            {{ item.quantity }}
-                            <button @click="increaseQuantity(item)">+</button>
-                        </td>
-                        <td>
-                            <button @click="removeFromCart(item.id)">❌ Fjern</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <h2>Samlet pris: {{ totalPrice }} DKK</h2>
-            <button @click="clearCart" class="clear-cart-btn">Tøm kurv</button>
-            <button type="button" onclick="window.location.href='index.html';" class="go-back-btn">Go back</button>
-            <button type="button" onclick="window.location.href='checkout.html';" class="check-out-btn">Check Out</button>
-            <div style="height: 30vh;">
-    
-        </div>
-
+        <br>
+                <div class="cart-container">
+                    <h1>Din Indkøbskurv</h1>
+                    <div v-if="cart.length === 0" class="cart-empty">
+                        <p>Kurven er tom.</p>
+                        <div class="cart-links">
+                            <a href="index.html">Tilbage til butikken</a>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Produkt</th>
+                                    <th>Model</th>
+                                    <th>Pris</th>
+                                    <th>Antal</th>
+                                    <th>Handling</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in cart" :key="item.id">
+                                    <td>
+                                        <img :src="item.imageData" alt="Product Image" style="height: 100;" style="width: 100;" class="product-image">
+                                    </td>
+                                    <td>{{ item.model }}</td>
+                                    <td>{{ item.price }} DKK</td>
+                                    <td>
+                                        <button @click="decreaseQuantity(item)">-</button>
+                                        {{ item.quantity }}
+                                        <button @click="increaseQuantity(item)">+</button>
+                                    </td>
+                                    <td>
+                                        <button @click="removeFromCart(item.id)">❌ Fjern</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h2>Samlet pris: {{ totalPrice }} DKK</h2>
+                        <button @click="clearCart" class="clear-cart-btn">Tøm kurv</button>
+                        <button type="button" onclick="window.location.href='index.html';" class="go-back-btn">Go back</button>
+                        <button type="button" onclick="window.location.href='checkout.html';" class="check-out-btn">Check Out</button>
+                    </div>
+                </div> <!-- Lukker cart-container -->
+                
+                <div style="height: 30vh;"></div>
+                
                 <!-- Footer -->
                 <footer class="bg-dark text-white text-center py-3 w-100">
                     <div class="container-fluid">
@@ -173,7 +175,6 @@
                         </div>
                     </div>
                 </footer>
-        
     </div>
     <script src="index.js"></script>
 </body>
