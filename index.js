@@ -101,7 +101,6 @@ Vue.createApp({
                     }
                     return { ...product, imageData };
                 });
-                // Store the full list of products for reference
                 this.products = [...this.allProducts];
             } catch (ex) {
                 console.error("Error fetching products:", ex);
@@ -245,7 +244,7 @@ Vue.createApp({
                     { 
                         headers: { 
                             "Content-Type": "multipart/form-data",
-                            "Authorization": `Bearer ${this.token}` // Tilføjet Authorization header
+                            "Authorization": `Bearer ${this.token}` 
                         } 
                     }
                 );
@@ -261,7 +260,7 @@ Vue.createApp({
                     `https://localhost:7214/api/Products/${productId}`, 
                     {
                         headers: {
-                            "Authorization": `Bearer ${this.token}` // Tilføjet Authorization header
+                            "Authorization": `Bearer ${this.token}` 
                         }
                     }
                 );
@@ -273,7 +272,7 @@ Vue.createApp({
             }
         },
     async login() {
-        if (this.isLockedOut) return; // Stop login hvis brugeren er låst ude
+        if (this.isLockedOut) return; 
     
         try {
             const response = await axios.post(AuthUrl, {
@@ -300,9 +299,8 @@ Vue.createApp({
             }
         } catch (ex) {
             if (ex.response && ex.response.status === 429) {
-                // Brugeren har lavet for mange forsøg
                 this.isLockedOut = true;
-                this.remainingTime = 300; // 5 minutter (300 sekunder)
+                this.remainingTime = 300; 
                 this.startCountdown();
                 this.loginMessage = "For mange forkerte forsøg! Prøv igen om 5 minutter.";
             } else {
@@ -388,19 +386,16 @@ Vue.createApp({
             this.cart = [];
             localStorage.removeItem("cart");
         },
-                // Håndter betaling
+                
                 handlePayment() {
-                    // Før du udfører betalingen, skal du validere kortoplysningerne.
                     if (this.validatePaymentDetails()) {
-                        // Send betalingsanmodning til din backend
                         axios.post('/api/payment', {
                             cart: this.cart,
                             paymentDetails: this.payment
                         })
                         .then(response => {
-                            // Hvis betalingen var vellykket, vis takkeside eller besked
                             alert("Betaling gennemført succesfuldt!");
-                            window.location.href = 'thank-you.html';  // Redirect til takkeside
+                            window.location.href = 'thank-you.html'; 
                         })
                         .catch(error => {
                             console.error("Fejl under betaling:", error);
@@ -408,17 +403,14 @@ Vue.createApp({
                         });
                     }
                 },
-                        // Valider betalingsoplysninger
         validatePaymentDetails() {
             if (!this.payment.cardNumber || !this.payment.expiryDate || !this.payment.cvv) {
                 alert("Venligst udfyld alle betalingsoplysninger.");
                 return false;
             }
-            // Tilføj mere validering af kortnumre, udløbsdato, etc.
             return true;
         }, 
         mounted() {
-            // Hent kurvdata fra localStorage eller API
             this.cart = JSON.parse(localStorage.getItem('cart')) || [];
         },
         startCountdown() {
