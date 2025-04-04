@@ -231,36 +231,47 @@ Vue.createApp({
                 alert("Fejl ved upload af produkt.");
             }
         },
-            async updateProduct(product, file) {
-                try {
-                    let formData = new FormData();
-                    formData.append("name", product.name);
-                    formData.append("model", product.model);
-                    formData.append("price", product.price);
-                    if (file) formData.append("file", file);
-            
-                    const response = await axios.put(
-                        `https://localhost:7214/api/Products/${product.id}`, 
-                        formData, 
-                        { headers: { "Content-Type": "multipart/form-data" } }
-                    );
-                    alert("Produkt opdateret!");
-                } catch (error) {
-                    console.error("Fejl ved opdatering af produkt:", error);
-                    alert("Kunne ikke opdatere produktet.");
-                }
+        async updateProduct(product, file) {
+            try {
+                let formData = new FormData();
+                formData.append("name", product.name);
+                formData.append("model", product.model);
+                formData.append("price", product.price);
+                if (file) formData.append("file", file);
+        
+                const response = await axios.put(
+                    `https://localhost:7214/api/Products/${product.id}`, 
+                    formData, 
+                    { 
+                        headers: { 
+                            "Content-Type": "multipart/form-data",
+                            "Authorization": `Bearer ${this.token}` // Tilføjet Authorization header
+                        } 
+                    }
+                );
+                alert("Produkt opdateret!");
+            } catch (error) {
+                console.error("Fejl ved opdatering af produkt:", error);
+                alert("Kunne ikke opdatere produktet.");
             }
-            ,
-    async deleteProduct(productId) {
-        try {
-            const response = await axios.delete(`https://localhost:7214/api/Products/${productId}`);
-            this.products = this.products.filter(product => product.id !== productId);
-            alert('Produkt slettet!');
-        } catch (error) {
-            console.error('Fejl ved sletning af produkt:', error);
-            alert('Kunne ikke slette produktet.');
-        }
-    },
+        },
+        async deleteProduct(productId) {
+            try {
+                const response = await axios.delete(
+                    `https://localhost:7214/api/Products/${productId}`, 
+                    {
+                        headers: {
+                            "Authorization": `Bearer ${this.token}` // Tilføjet Authorization header
+                        }
+                    }
+                );
+                this.products = this.products.filter(product => product.id !== productId);
+                alert('Produkt slettet!');
+            } catch (error) {
+                console.error('Fejl ved sletning af produkt:', error);
+                alert('Kunne ikke slette produktet.');
+            }
+        },
     async login() {
         if (this.isLockedOut) return; // Stop login hvis brugeren er låst ude
     
