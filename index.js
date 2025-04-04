@@ -279,7 +279,10 @@ Vue.createApp({
                 username: this.user.username,
                 password: this.user.password
             }, {
-                headers: { "Content-Type": "application/json" }
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${this.token}` 
+                }
             });
     
             const data = response.data;
