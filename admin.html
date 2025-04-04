@@ -98,6 +98,7 @@
             <div v-if="registerMessage" class="text-success text-center">{{ registerMessage }}</div>
         </div>
 
+
                 <!-- Cart Dropdown Section -->
                 <div v-if="showCartDropdown" class="cart-dropdown card p-3 position-absolute bg-light shadow-lg" style="top: 80px; right: 20px; z-index: 100;">
                     <h3>Indkøbskurv</h3>
@@ -146,20 +147,26 @@
                 </button>
                 <div v-if="uploadMessage" class="text-success mt-2">{{ uploadMessage }}</div>
             </div>
-
-            <!-- Update Section -->
-            <div class="section container mt-5">
-                <h2>Rediger Produkter</h2>
-                <div v-for="product in products" :key="product.id" class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ product.name }}</h5>
-                        <input v-model="product.name" placeholder="Produktnavn" type="text" class="form-control mb-2" />
-                        <input v-model="product.model" placeholder="Produktmodel" type="text" class="form-control mb-2" />
-                        <input v-model="product.price" placeholder="Pris" type="number" class="form-control mb-2" />
-                        <button @click="updateProduct(product)" class="btn btn-primary">Opdater</button>
-                    </div>
-                </div>
+<!-- Update Section -->
+<div class="section container mt-5">
+    <h2>
+        Rediger Produkter
+        <button @click="toggleEditSection" class="btn btn-link text-decoration-none">
+            <i :class="editSectionVisible ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
+        </button>
+    </h2>
+    <div :class="['edit-section', editSectionVisible ? 'expanded' : 'collapsed']">
+        <div v-for="product in products" :key="product.id" class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <input v-model="product.name" placeholder="Produktnavn" type="text" class="form-control mb-2" />
+                <input v-model="product.model" placeholder="Produktmodel" type="text" class="form-control mb-2" />
+                <input v-model="product.price" placeholder="Pris" type="number" class="form-control mb-2" />
+                <button @click="updateProduct(product)" class="btn btn-primary">Opdater</button>
             </div>
+        </div>
+    </div>
+</div>
 
             <!-- Delete Section -->
             <div class="section container mt-5">
@@ -172,6 +179,8 @@
                 </ul>
             </div>
         </div>
+
+
 
         <!-- Message for non-admin users -->
         <div v-else class="text-center mt-5">

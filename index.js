@@ -14,6 +14,7 @@ Vue.createApp({
             selectedFile: null,
             idToGetById: 0,
             showRegister: false,
+            editSectionVisible: true,
             showChangePassword: false,
             showCartDropdown: false,
             singleProduct: null,
@@ -113,6 +114,9 @@ Vue.createApp({
         toggleCartDropdown() {
             this.showCartDropdown = !this.showCartDropdown;
         },
+        toggleDeleteUserSection() {
+            this.deleteUserSectionVisible = !this.deleteUserSectionVisible;
+        },
         filterByName(name) {
             if (name) {
                 this.products = this.allProducts.filter(product => 
@@ -124,6 +128,9 @@ Vue.createApp({
         },
         toggleChangePassword() {
             this.showChangePassword = !this.showChangePassword;
+        },
+        toggleEditSection() {
+            this.editSectionVisible = !this.editSectionVisible;
         },
         async register() {
             try {
@@ -426,6 +433,5 @@ Vue.createApp({
                 }
             }, 1000);
         },
-        
     },
 }).mount('#app');

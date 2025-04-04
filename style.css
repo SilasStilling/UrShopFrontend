@@ -448,3 +448,18 @@ table img {
     font-size: 18px;
     color: #555;
 }
+
+/* animation til edit */
+
+.edit-section {
+    overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+.edit-section.collapsed {
+    height: 0;
+}
+
+.edit-section.expanded {
+    height: auto;
+}
